@@ -1,6 +1,7 @@
+#!/usr/bin/env node
+
 import  commander from 'commander';
-import {crudGenerator} from './crud-generator'
-// const generateCrud = require('./generateCrud');
+import {crudGenerator} from './crud-generator';
 
 const program = new commander.Command();
 

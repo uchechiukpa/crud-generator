@@ -29,8 +29,8 @@ import * as path from 'path';
 
   export async function crudGenerator(data){
     const element = { entityName: data };
-    const sourceDir = '/Users/Uchechi.Ukpa/Desktop/crud-generator/users';
-    const destinationDir = `/Users/Uchechi.Ukpa/Desktop/crud-generator/src/${element.entityName.toLowerCase()}`;
+    const sourceDir = path.join(__dirname,'..','users');
+    const destinationDir =path.join(process.cwd(), `src/${element.entityName.toLowerCase()}`);
 
   renderDirectory(sourceDir, destinationDir, element);
 

@@ -59,15 +59,11 @@ function renderDirectory(sourceDir, destinationDir, data) {
         }
     });
 }
-// const data = { entityName: 'Product' };
-// const items = fs.readdirSync('/Users/Uchechi.Ukpa/Desktop/crud-generator/users', { withFileTypes: true });
-// console.log(items)
 function crudGenerator(data) {
     return __awaiter(this, void 0, void 0, function* () {
-        // console.log(data)
         const element = { entityName: data };
-        const sourceDir = '/Users/Uchechi.Ukpa/Desktop/crud-generator/users';
-        const destinationDir = `/Users/Uchechi.Ukpa/Desktop/crud-generator/src/${element.entityName.toLowerCase()}`;
+        const sourceDir = path.join(__dirname, '..', 'users');
+        const destinationDir = path.join(process.cwd(), `src/${element.entityName.toLowerCase()}`);
         renderDirectory(sourceDir, destinationDir, element);
     });
 }
