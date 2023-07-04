@@ -1,0 +1,35 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+import { <%= entityName %> } from './<%= entityName.toLowerCase() %>.entity';
+
+@Injectable()
+export class <%= entityName %>Service {
+  constructor(
+    @InjectRepository(<%= entityName %>)
+    private readonly <%= entityName.toLowerCase() %>Repository: Repository<<%= entityName %>>,
+  ) {}
+
+  create(<%= entityName.toLowerCase() %>: <%= entityName %>) {
+    return this.<%= entityName.toLowerCase() %>Repository.save(<%= entityName.toLowerCase() %>);
+  }
+
+  findAll() {
+    return this.<%= entityName.toLowerCase() %>Repository.find();
+  }
+
+  findOne(id: number) {
+    return this.<%= entityName.toLowerCase() %>Repository.findOne(id);
+  }
+
+  async update(id: number, <%= entityName.toLowerCase() %>: <%= entityName %>) {
+    await this.<%= entityName.toLowerCase() %>Repository.update(id, <%= entityName.toLowerCase() %>);
+    return this.<%= entityName.toLowerCase() %>Repository.findOne(id);
+  }
+
+  delete(id: number) {
+    return this.<%= entityName.toLowerCase() %>Repository.delete(id);
+  }
+}
+

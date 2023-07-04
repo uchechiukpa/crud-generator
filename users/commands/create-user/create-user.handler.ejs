@@ -1,0 +1,29 @@
+import { HttpException, HttpStatus } from '@nestjs/common';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { Repository } from 'typeorm';
+import { <%= entityName %>Entity } from '../../entities/<%= entityName.toLowerCase() %>.entity';
+import { Create<%= entityName %>Command } from './create-<%= entityName.toLowerCase() %>.command';
+import { Created<%= entityName %>ReponseObject } from '../../dto/create-<%= entityName.toLowerCase() %>/create-<%= entityName.toLowerCase() %>-response.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+
+@CommandHandler(Create<%= entityName %>Command)
+export class Create<%= entityName %>Handler implements ICommandHandler<Create<%= entityName %>Command> {
+  constructor(
+    @InjectRepository(<%= entityName %>Entity)
+    private <%= entityName.toLowerCase() %>Repository: Repository<<%= entityName %>Entity>
+    ) {}
+
+  async execute(
+    command: Create<%= entityName %>Command,
+  ): Promise<Created<%= entityName %>ReponseObject> {
+    const {
+      create<%= entityName %>Dto,
+    } = command;
+    await this.<%= entityName.toLowerCase() %>Repository.save(create<%= entityName %>Dto);
+    return new Created<%= entityName %>ReponseObject({
+        status: 'success',
+        message: "<%= entityName.toLowerCase() %> created successfully",
+        responseCode: 201
+    });
+  }
+}

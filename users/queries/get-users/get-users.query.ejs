@@ -1,0 +1,6 @@
+import { IQuery } from '@nestjs/cqrs';
+import { Get<%= entityName %>sQueryDto } from '../../dto/get-users/get-<%= entityName.toLowerCase() %>s.query.dto';
+
+export class Get<%= entityName %>sQuery implements IQuery {
+  constructor(public readonly get<%= entityName %>sQueryDto: Get<%= entityName %>sQueryDto) {}
+}

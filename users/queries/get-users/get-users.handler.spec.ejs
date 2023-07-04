@@ -1,0 +1,49 @@
+import { Repository } from 'typeorm';
+import { Get<%= entityName %>sHandler } from './get-<%= entityName.toLowerCase() %>s.handler';
+import { Get<%= entityName %>sQuery } from './get-<%= entityName.toLowerCase() %>s.query';
+import { Get<%= entityName %>sReponseDto } from '../../dto/get-<%= entityName.toLowerCase() %>s/get-<%= entityName.toLowerCase() %>s-response.dto';
+
+describe('Get<%= entityName %>sHandler', () => {
+  let get<%= entityName %>sHandler: Get<%= entityName %>sHandler;
+  let <%= entityName.toLowerCase() %>Repository: Repository<<%= entityName %>Entity>;
+  
+  beforeEach(() => {
+    <%= entityName.toLowerCase() %>Repository = new Repository<<%= entityName %>Entity>();
+    get<%= entityName %>sHandler = new Get<%= entityName %>sHandler(<%= entityName.toLowerCase() %>sRepository);
+        const module: TestingModule = await Test.createTestingModule({
+          providers: [
+            Get<%= entityName %>sHandler,
+            {
+              provide: getRepositoryToken(<%= entityName %>Entity),
+              useValue: {
+                findOne: jest.fn().mockResolvedValue([{id: 3}, {id: 5}]),
+              },
+            },
+          ],
+        }).compile();
+        get<%= entityName %>sHandler = module.get<Get<%= entityName %>sHandler>(Get<%= entityName %>sHandler);
+        <%= entityName.toLowerCase() %>Repository = module.get<Repository<<%= entityName %>Entity>>(getRepositoryToken(<%= entityName %>Entity));
+  });
+  describe('execute', () => {
+    it('should retrieve <%= entityName.toLowerCase() %>s and return Get<%= entityName %>sReponseDto', async () => {
+      // Arrange
+      const limit = 10;
+      const offset = 0;
+      const get<%= entityName %>sQueryDto = { limit, offset };
+      const query = new Get<%= entityName %>sQuery(get<%= entityName %>sQueryDto);
+      const <%= entityName.toLowerCase() %>s = [{ id: 1 }, { id: 2 }]; // Mock <%= entityName.toLowerCase() %>s array with plain JavaScript objects
+      const findSpy = jest.spyOn(<%= entityName.toLowerCase() %>Repository, 'find').mockResolvedValueOnce(<%= entityName.toLowerCase() %>s);
+  
+      // Act
+      const result = await get<%= entityName %>sHandler.execute(query);
+  
+      // Assert
+      expect(findSpy).toHaveBeenCalled();
+      expect(result).toBeInstanceOf(Get<%= entityName %>sReponseDto);
+      expect(result.status).toEqual('success');
+      expect(result.message).toEqual('<%= entityName.toLowerCase() %>s retrieved successfully');
+      expect(result.responseCode).toEqual(200);
+      expect(result.data).toEqual(<%= entityName.toLowerCase() %>s);
+    });
+  });
+});

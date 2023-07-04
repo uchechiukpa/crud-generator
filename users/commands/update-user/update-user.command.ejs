@@ -1,0 +1,8 @@
+import { Update<%= entityName %>DTO } from "../../dto/update-<%= entityName.toLowerCase() %>/update-<%= entityName.toLowerCase() %>-request.dto";
+
+export class Update<%= entityName %>Command {
+    constructor(
+        public readonly id: number,
+        public readonly update<%= entityName %>Dto: Partial<Update<%= entityName %>DTO>
+    ) {}
+}

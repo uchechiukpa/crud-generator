@@ -1,0 +1,8 @@
+import { Create<%= entityName %>Dto } from "../../dto/create-<%= entityName.toLowerCase() %>/create-<%= entityName.toLowerCase() %>-request.dto";
+
+export class Create<%= entityName %>Command {
+    constructor(
+        public readonly create<%= entityName %>Dto: Create<%= entityName %>Dto
+    ) {}
+}
+

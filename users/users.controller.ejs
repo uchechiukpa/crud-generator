@@ -1,0 +1,36 @@
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+
+import { Create<%= entityName %>Command } from './commands/create-<%= entityName.toLowerCase() %>.command';
+import { Update<%= entityName %>Command } from './commands/update-<%= entityName.toLowerCase() %>.command';
+import { Get<%= entityName %>Query } from './queries/get-<%= entityName.toLowerCase() %>.query';
+import { Get<%= entityName %>sQuery } from './queries/get-<%= entityName.toLowerCase() %>s.query';
+
+@Controller('<%= entityName.toLowerCase() %>')
+export class <%= entityName %>Controller {
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
+  ) {}
+
+  @Post()
+  async create(@Body() create<%= entityName %>Dto: Create<%= entityName %>Dto) {
+    return this.commandBus.execute(new Create<%= entityName %>Command(create<%= entityName %>Dto));
+  }
+
+  @Get()
+  async findAll() {
+    return this.queryBus.execute(new Get<%= entityName %>sQuery());
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return this.queryBus.execute(new Get<%= entityName %>Query(id));
+  }
+
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() update<%= entityName %>Dto: Update<%= entityName %>Dto) {
+    return this.commandBus.execute(new Update<%= entityName %>Command(id, update<%= entityName %>Dto));
+  }
+}
+
