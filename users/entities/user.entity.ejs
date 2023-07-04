@@ -1,0 +1,7 @@
+import { Entity, PrimaryGeneratedColumn} from "typeorm"
+
+@Entity('<%= entityName.toLowerCase() %>')
+export class <%= entityName %>Entity {
+    @PrimaryGeneratedColumn()
+    id: number
+}

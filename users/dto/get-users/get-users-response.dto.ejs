@@ -1,0 +1,48 @@
+import { ApiProperty } from "@nestjs/swagger";
+
+export class Get<%= entityName %>sReponseDto {
+  @ApiProperty({
+    description: "the status of the request",
+    example: "Success",
+  })
+  public readonly status: string;
+  @ApiProperty({
+    description: "the message of the request",
+    example: "<%= entityName.toLowerCase() %>s retrived successfully",
+  })
+  public readonly message: string;
+  @ApiProperty({
+    description: "the responseCode of the request",
+    example: 200,
+  })
+  public readonly responseCode: number;
+
+  @ApiProperty({
+    description: "the responseData of the request",
+    example: [
+      {
+        id: 2,
+      },
+      {
+        id: 3,
+      },
+    ],
+  })
+  public readonly data: Array<responseData>;
+
+  constructor(response: <%= entityName.toLowerCase() %>Response) {
+    this.status = response.status;
+    this.message = response.message;
+    this.responseCode = response.responseCode;
+    this.data = response.data;
+  }
+}
+interface <%= entityName.toLowerCase() %>Response {
+  status: string;
+  responseCode: number;
+  message: string;
+  data: Array<responseData>;
+}
+interface responseData {
+  id: number;
+}

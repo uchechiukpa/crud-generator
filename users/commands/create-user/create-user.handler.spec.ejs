@@ -1,0 +1,40 @@
+import { Test, TestingModule } from '@nestjs/testing';
+import { Repository } from 'typeorm';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Create<%= entityName %>Handler } from './create-<%= entityName.toLowerCase() %>.handler';
+import { <%= entityName %>Entity } from '../../entities/<%= entityName.toLowerCase() %>.entity';
+import { Create<%= entityName %>Command } from './create-<%= entityName.toLowerCase() %>.command';
+
+describe('Create<%= entityName %>Handler', () => {
+  let create<%= entityName %>Handler: Create<%= entityName %>Handler;
+  let <%= entityName.toLowerCase() %>Repository: Repository<<%= entityName %>Entity>;
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        Create<%= entityName %>Handler,
+        {
+          provide: getRepositoryToken(<%= entityName %>Entity),
+          useValue: {
+            findOne: jest.fn().mockResolvedValue(null),
+            create: jest.fn().mockReturnValue({}),
+            save: jest.fn().mockResolvedValue(undefined),
+          },
+        },
+      ],
+    }).compile();
+
+    create<%= entityName %>Handler = module.get<Create<%= entityName %>Handler>(Create<%= entityName %>Handler);
+    <%= entityName.toLowerCase() %>Repository = module.get<Repository<<%= entityName %>Entity>>(getRepositoryToken(<%= entityName %>Entity));
+  });
+
+  it('should create a new <%= entityName.toLowerCase() %> successfully', async () => {
+    const command = new Create<%= entityName %>Command({
+      id: 4
+    });
+
+    await create<%= entityName %>Handler.execute(command);
+    expect(<%= entityName.toLowerCase() %>Repository.create).toBeCalled();
+    expect(<%= entityName.toLowerCase() %>Repository.save).toBeCalled();
+  });
+});

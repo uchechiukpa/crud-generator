@@ -1,0 +1,4 @@
+import { Get<%= entityName %>Handler } from "./get-<%= entityName.toLowerCase() %>/get-<%= entityName.toLowerCase() %>.handler";
+import { Get<%= entityName %>sHandler } from "./get-<%= entityName.toLowerCase() %>s/get-<%= entityName.toLowerCase() %>s.handler";
+export const queryHandler = [Get<%= entityName %>Handler, Get<%= entityName %>sHandler]
+

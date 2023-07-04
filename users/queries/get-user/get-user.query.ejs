@@ -1,0 +1,5 @@
+import { IQuery } from '@nestjs/cqrs';
+
+export class Get<%= entityName %>Query implements IQuery {
+  constructor(public readonly id: number) {}
+}

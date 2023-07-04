@@ -1,0 +1,41 @@
+import { HttpException, HttpStatus } from "@nestjs/common";
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { Repository } from "typeorm";
+import { <%= entityName %>Entity } from "../../entities/<%= entityName.toLowerCase() %>.entity";
+import { Created<%= entityName %>ReponseObject } from "../../dto/create-<%= entityName.toLowerCase() %>/create-<%= entityName.toLowerCase() %>-response.dto";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Update<%= entityName %>Command } from "./update-<%= entityName.toLowerCase() %>.command";
+
+@CommandHandler(Update<%= entityName %>Command)
+export class Update<%= entityName %>Handler implements ICommandHandler<Update<%= entityName %>Command> {
+  constructor(
+    @InjectRepository(<%= entityName %>Entity)
+    private <%= entityName.toLowerCase() %>Repository: Repository<<%= entityName %>Entity>
+  ) {}
+
+  async execute(
+    command: Update<%= entityName %>Command
+  ): Promise<Created<%= entityName %>ReponseObject> {
+    const { id, update<%= entityName %>Dto } = command;
+
+    const <%= entityName.toLowerCase() %> = await this.check<%= entityName %>Exist(id);
+
+    Object.assign(<%= entityName.toLowerCase() %>, update<%= entityName %>Dto);
+    await this.<%= entityName.toLowerCase() %>Repository.save(<%= entityName.toLowerCase() %>);
+    return new Created<%= entityName %>ReponseObject({
+      status: "success",
+      message: "<%= entityName.toLowerCase() %> updated successfully",
+      responseCode: 201,
+    });
+  }
+  async check<%= entityName %>Exist(id: number) {
+    const <%= entityName.toLowerCase() %> = await this.<%= entityName.toLowerCase() %>Repository.findOne({ where: { id } });
+    if (!<%= entityName.toLowerCase() %>) {
+      throw new HttpException(
+        "<%= entityName.toLowerCase() %> with this id does not exist",
+        HttpStatus.BAD_REQUEST
+      );
+    }
+    return <%= entityName.toLowerCase() %>;
+  }
+}

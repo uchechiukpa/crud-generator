@@ -1,0 +1,4 @@
+import { Create<%= entityName %>Handler } from "./create-<%= entityName.toLowerCase() %>/create-<%= entityName.toLowerCase() %>.handler";
+import { Update<%= entityName %>Handler } from "./update-<%= entityName.toLowerCase() %>/update-<%= entityName.toLowerCase() %>.handler";
+
+export const commandHandlers = [Create<%= entityName %>Handler, Update<%= entityName %>Handler];

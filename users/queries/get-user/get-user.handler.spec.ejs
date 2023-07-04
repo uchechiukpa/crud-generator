@@ -1,0 +1,60 @@
+import { Repository } from 'typeorm';
+import { Get<%= entityName %>Handler } from './get-<%= entityName.toLowerCase() %>.handler';
+import { Get<%= entityName %>Query } from './get-<%= entityName.toLowerCase() %>.query';
+import { Get<%= entityName %>ReponseDto } from '../../dto/get-<%= entityName.toLowerCase() %>/get-<%= entityName.toLowerCase() %>-response.dto';
+import { <%= entityName %>Entity } from '../../entities/<%= entityName.toLowerCase() %>.entity';
+import { HttpException, HttpStatus } from '@nestjs/common';
+
+describe('Get<%= entityName %>Handler', () => {
+  let get<%= entityName %>Handler: Get<%= entityName %>Handler;
+  let <%= entityName.toLowerCase() %>Repository: Repository<<%= entityName %>Entity>;
+
+  beforeEach(() => {
+    <%= entityName.toLowerCase() %>Repository = new Repository<<%= entityName %>Entity>();
+    get<%= entityName %>Handler = new Get<%= entityName %>Handler(<%= entityName.toLowerCase() %>Repository);
+        const module: TestingModule = await Test.createTestingModule({
+          providers: [
+            Get<%= entityName %>Handler,
+            {
+              provide: getRepositoryToken(<%= entityName %>Entity),
+              useValue: {
+                findOne: jest.fn().mockResolvedValue({id: 3}),
+              },
+            },
+          ],
+        }).compile();
+        get<%= entityName %>Handler = module.get<Get<%= entityName %>Handler>(Get<%= entityName %>Handler);
+        <%= entityName.toLowerCase() %>Repository = module.get<Repository<<%= entityName %>sEntity>>(getRepositoryToken(<%= entityName %>Entity));
+  });
+  describe('execute', () => {
+    it('should retrieve an existing <%= entityName.toLowerCase() %> and return Get<%= entityName %>ReponseDto', async () => {
+      // Arrange
+      const id = 1;
+      const query = new Get<%= entityName %>Query(id);
+      const <%= entityName.toLowerCase() %> = new <%= entityName %>sEntity();
+      const findOneSpy = jest.spyOn(<%= entityName.toLowerCase() %>Repository, 'findOne').mockResolvedValueOnce(<%= entityName.toLowerCase() %>);
+  
+      // Act
+      const result = await get<%= entityName %>Handler.execute(query);
+  
+      // Assert
+      expect(findOneSpy).toHaveBeenCalledWith({ where: { id } });
+      expect(result).toBeInstanceOf(Get<%= entityName %>ReponseDto);
+      expect(result.status).toEqual('success');
+      expect(result.message).toEqual('<%= entityName.toLowerCase() %> retrieved successfully');
+      expect(result.responseCode).toEqual(200);
+      expect(result.data).toEqual(<%= entityName.toLowerCase() %>);
+    });
+
+    it('should throw HttpException if <%= entityName.toLowerCase() %> does not exist', async () => {
+      // Arrange
+      const id = 1;
+      const query = new Get<%= entityName %>Query(id);
+      const findOneSpy = jest.spyOn(<%= entityName.toLowerCase() %>Repository, 'findOne').mockResolvedValueOnce(undefined);
+  
+      // Act and Assert
+      await expect(get<%= entityName %>Handler.execute(query)).rejects.toThrowError(HttpException);
+      expect(findOneSpy).toHaveBeenCalledWith({ where: { id } });
+    });
+  });
+});
