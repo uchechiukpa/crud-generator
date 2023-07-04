@@ -1,0 +1,30 @@
+import { HttpException, HttpStatus } from "@nestjs/common";
+import { QueryHandler, IQueryHandler } from "@nestjs/cqrs";
+import { InjectRepository } from "@nestjs/typeorm";
+import { MoreThan, Repository } from "typeorm";
+import { Get<%= entityName %>sReponseDto } from "../../dto/get-<%= entityName.toLowerCase() %>s/get-<%= entityName.toLowerCase() %>s-response.dto";
+import { Get<%= entityName %>sReponseDto } from "../../dto/get-<%= entityName.toLowerCase() %>s/get-<%= entityName.toLowerCase() %>s-response.dto";
+import { <%= entityName %>Entity } from "../../entities/<%= entityName.toLowerCase() %>s.entity";
+import { Get<%= entityName %>sQuery } from "./get-<%= entityName.toLowerCase() %>s.query";
+
+@QueryHandler(Get<%= entityName %>sQuery)
+export class Get<%= entityName %>sHandler implements IQueryHandler<Get<%= entityName %>sQuery> {
+  constructor(
+    @InjectRepository(<%= entityName %>sEntity)
+    private <%= entityName %>Repository: Repository<<%= entityName %>Entity>
+  ) {}
+
+  async execute(query: Get<%= entityName %>sQuery): Promise<Get<%= entityName %>sReponseDto> {
+    const {
+      get<%= entityName %>sQueryDto: { limit, offset },
+    } = query;
+    const <%= entityName.toLowerCase() %>s = await this.<%= entityName.toLowerCase() %>Repository.find({where: {id:MoreThan(offset)}, take: limit || 0})
+
+    return new Get<%= entityName %>sReponseDto({
+      status: "success",
+      message: "<%= entityName.toLowerCase() %>s retrieved successfully",
+      responseCode: 200,
+      data: <%= entityName.toLowerCase() %>s,
+    });
+  }
+}

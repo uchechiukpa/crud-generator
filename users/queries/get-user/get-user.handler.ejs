@@ -1,0 +1,35 @@
+import { HttpException, HttpStatus } from "@nestjs/common";
+import { QueryHandler, IQueryHandler } from "@nestjs/cqrs";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Get<%= entityName %>ReponseDto } from "../../dto/get-<%= entityName.toLowerCase() %>/get-<%= entityName.toLowerCase() %>-response.dto";
+import { <%= entityName %>sEntity } from "../../entities/<%= entityName.toLowerCase() %>.entity";
+import { Get<%= entityName %>Query } from "./get-<%= entityName.toLowerCase() %>.query";
+
+@QueryHandler(Get<%= entityName %>Query)
+export class Get<%= entityName %>Handler implements IQueryHandler<Get<%= entityName %>Query> {
+  constructor(
+    @InjectRepository(<%= entityName %>sEntity)
+    private <%= entityName.toLowerCase() %>Repository: Repository<<%= entityName %>sEntity>
+  ) {}
+
+  async execute(query: Get<%= entityName %>Query): Promise<Get<%= entityName %>ReponseDto> {
+    const { id } = query;
+    const <%= entityName.toLowerCase() %> = await this.check<%= entityName %>Exist(id);
+
+    return new Get<%= entityName %>ReponseDto({
+      status: "success",
+      message: "<%= entityName.toLowerCase() %> retrieved successfully",
+      responseCode: 200,
+      data: <%= entityName.toLowerCase() %>,
+    });
+  }
+
+  async check<%= entityName %>Exist(id: number) {
+    const <%= entityName.toLowerCase() %> = await this.<%= entityName.toLowerCase() %>Repository.findOne({ where: { id } });
+    if (!<%= entityName.toLowerCase() %>) {
+      throw new HttpException("<%= entityName.toLowerCase() %> not found", HttpStatus.NOT_FOUND);
+    }
+    return <%= entityName.toLowerCase() %>;
+  }
+}

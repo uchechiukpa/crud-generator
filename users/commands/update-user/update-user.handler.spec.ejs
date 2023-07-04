@@ -1,0 +1,66 @@
+import { Repository } from 'typeorm';
+import { Update<%= entityName %>Handler } from './update-<%= entityName.toLowerCase() %>.handler';
+import { Update<%= entityName %>Command } from './update-<%= entityName.toLowerCase() %>.command';
+import { Created<%= entityName %>ReponseObject } from '../../dto/create-<%= entityName.toLowerCase() %>/create-<%= entityName.toLowerCase() %>-response.dto';
+import { <%= entityName %>Entity } from '../../entities/<%= entityName.toLowerCase() %>.entity';
+import { HttpException, HttpStatus } from '@nestjs/common';
+
+describe('Update<%= entityName %>Handler', () => {
+  let update<%= entityName %>Handler: Update<%= entityName %>Handler;
+  let <%= entityName.toLowerCase() %>Repository: Repository<<%= entityName %>Entity>;
+
+  beforeEach(() => {
+    <%= entityName.toLowerCase() %>Repository = new Repository<<%= entityName %>Entity>();
+    update<%= entityName %>Handler = new Update<%= entityName %>Handler(<%= entityName.toLowerCase() %>Repository);
+        const module: TestingModule = await Test.createTestingModule({
+          providers: [
+            Update<%= entityName %>Handler,
+            {
+              provide: getRepositoryToken(<%= entityName %>Entity),
+              useValue: {
+                findOne: jest.fn().mockResolvedValue(null),
+                save: jest.fn().mockResolvedValue(undefined),
+              },
+            },
+          ],
+        }).compile();
+    update<%= entityName %>Handler = module.get<Update<%= entityName %>Handler>(Update<%= entityName %>Handler);
+    <%= entityName.toLowerCase() %>Repository = module.get<Repository<<%= entityName %>Entity>>(getRepositoryToken(<%= entityName %>Entity));
+ 
+  });
+
+  describe('execute', () => {
+    it('should update an existing <%= entityName.toLowerCase() %> and return Created<%= entityName %>ReponseObject', async () => {
+      // Arrange
+      const id = 1;
+      const update<%= entityName %>Dto = { /* provide the necessary update data for the <%= entityName.toLowerCase() %> */ };
+      const command = new Update<%= entityName %>Command(id, update<%= entityName %>Dto);
+      const <%= entityName.toLowerCase() %> = new <%= entityName %>Entity();
+      const findOneSpy = jest.spyOn(<%= entityName.toLowerCase() %>Repository, 'findOne').mockResolvedValueOnce(<%= entityName.toLowerCase() %>);
+      const saveSpy = jest.spyOn(<%= entityName.toLowerCase() %>Repository, 'save').mockResolvedValueOnce();
+  
+      // Act
+      const result = await update<%= entityName %>Handler.execute(command);
+  
+      // Assert
+      expect(findOneSpy).toHaveBeenCalledWith({ where: { id } });
+      expect(saveSpy).toHaveBeenCalledWith(<%= entityName.toLowerCase() %>);
+      expect(result).toBeInstanceOf(Created<%= entityName %>ReponseObject);
+      expect(result.status).toEqual('success');
+      expect(result.message).toEqual('<%= entityName.toLowerCase() %> updated successfully');
+      expect(result.responseCode).toEqual(201);
+    });
+
+    it('should throw HttpException if <%= entityName.toLowerCase() %> does not exist', async () => {
+      // Arrange
+      const id = 1;
+      const update<%= entityName %>Dto = { /* provide the necessary update data for the <%= entityName.toLowerCase() %> */ };
+      const command = new Update<%= entityName %>Command(id, update<%= entityName %>Dto);
+      const findOneSpy = jest.spyOn(<%= entityName.toLowerCase() %>Repository, 'findOne').mockResolvedValueOnce(undefined);
+  
+      // Act and Assert
+      await expect(update<%= entityName %>Handler.execute(command)).rejects.toThrowError(HttpException);
+      expect(findOneSpy).toHaveBeenCalledWith({ where: { id } });
+    });
+  });
+});
